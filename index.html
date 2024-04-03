@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>safari bug</title>
+  </head>
+  <body>
+    <div class="bug-test-box stage-block-room" id="bug-test-box">
+      <div class="bug-test-local-video bug-test-video-body stage-block-room">
+        <div class="bug-test-model-box">
+          <!-- img is important -->
+          <img src="/s2_position1-6.png" class="bug-test-model-img" />
+        </div>
+        <div id="bug-test-local-video" class="bug-test-item-box">
+          <video
+            id="bug-test-local-video-video"
+            muted
+            autoplay
+            playsinline
+            loop
+          ></video>
+        </div>
+      </div>
+    </div>
+    <style>
+      .bug-test-box.stage-flex-room {
+        /* flex is important */
+        display: flex;
+      }
+      .bug-test-video-body.stage-flex-room {
+        height: calc(44vw * 1.6);
+        width: 44vw;
+        position: relative;
+        z-index: 1;
+      }
+      .bug-test-item-box {
+        height: 100%;
+        width: 100%;
+      }
+      .bug-test-local-video {
+        background-color: #ccc;
+      }
+
+      .bug-test-local-video.stage-block-room.video-change {
+        width: 98px;
+        height: 156px;
+      }
+      .bug-test-local-video.stage-block-room {
+        width: 98px;
+        height: 156px;
+      }
+      .bug-test-model-img {
+        width: 100%;
+        height: 100%;
+      }
+      .bug-test-box video {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        background-color: brown;
+        border: 1px solid red;
+      }
+    </style>
+    <script>
+      let change = false
+
+      document
+        .getElementById('bug-test-box')
+        .addEventListener('click', function () {
+          change = !change
+          let stageClass = {
+            'stage-block-room': !change,
+            'stage-flex-room': change,
+          }
+          this.className =
+            'bug-test-box ' +
+            (stageClass['stage-block-room'] ? 'stage-block-room' : '') +
+            (stageClass['stage-flex-room'] ? ' stage-flex-room' : '')
+
+          let videoBodies = document.getElementsByClassName(
+            'bug-test-video-body'
+          )
+          for (let i = 0; i < videoBodies.length; i++) {
+            if (stageClass['stage-block-room']) {
+              videoBodies[i].classList.add('stage-block-room')
+              videoBodies[i].classList.remove('stage-flex-room')
+            } else {
+              videoBodies[i].classList.add('stage-flex-room')
+              videoBodies[i].classList.remove('stage-block-room')
+            }
+          }
+        })
+
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then(function (stream) {
+          let video = document.getElementById('bug-test-local-video-video')
+          video.srcObject = stream
+          video.onloadedmetadata = function (e) {
+            video.play()
+          }
+        })
+        .catch(function (err) {
+          console.log('An error occurred: ' + err)
+        })
+    </script>
+  </body>
+</html>
