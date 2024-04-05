@@ -6,6 +6,9 @@
     <title>safari bug</title>
   </head>
   <body>
+    <div>
+      <button id="changeHistoryBtn">change history</button>
+    </div>
     <div class="bug-test-box stage-block-room" id="bug-test-box">
       <div class="bug-test-local-video bug-test-video-body stage-block-room">
         <!-- img is important -->
@@ -99,6 +102,13 @@
         })
         .catch(function (err) {
           console.log('An error occurred: ' + err)
+        })
+      // changeHistoryBtn
+      document
+        .getElementById('changeHistoryBtn')
+        .addEventListener('click', function () {
+          var randomNumber = Math.floor(Math.random() * 1000) // 生成一个0到999的随机数
+          history.pushState({}, '', String(randomNumber))
         })
     </script>
   </body>
